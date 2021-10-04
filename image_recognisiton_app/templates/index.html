@@ -21,6 +21,7 @@
 
     <!--jquery lib-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
     <!--The script which call our Flask app-->
     <script>
         let base64Image;
@@ -40,9 +41,9 @@
         $("#predict-button").click(function(){
             let message = {image: base64Image}
             // you could also use 127.0.0.1 instead of 0.0.0.0 
-            $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
-            $("#prediction").text("results: "+response.prediction[0]+" ( confidence : "+response.prediction[1]+")");
-                console.log(response);
+            $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(prediction){
+            $("#prediction").text("results: "+ prediction["class"] + " ( confidence : "+ prediction["confidence_level"]+")");
+            console.log(prediction);
             });
         });       
     </script>
