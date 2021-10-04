@@ -7,17 +7,14 @@ import os
 import base64
 import numpy as np
 from flask import Flask, render_template, request, jsonify
-#from tensorflow.keras.models import load_model
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
 sys.path.append(os.path.abspath("./model"))
 
-global GRAPH, MODEL
+global graph_mode
 
-#MODEL, GRAPH = init()
 app = Flask(__name__)
-
 
 @app.route('/')
 def index_view():
@@ -33,7 +30,7 @@ def convertImage(img_data_uploaded):
 @app.route('/predict/',methods=['GET','POST'])
 def predict():
     """Predict function to predict an uploaded image """
-    GRAPH=tf.compat.v1.get_default_graph()
+    graph_mode=tf.compat.v1.get_default_graph()
     print("about to request get_data")
     img_data = request.get_data()
     convertImage(img_data)
@@ -41,7 +38,7 @@ def predict():
     img_tensor = image.img_to_array(img_image)
     img_tensor = np.expand_dims(img_tensor, axis=0)
     img_tensor /= 255.
-    with GRAPH.as_default():
+    with graph_mode.as_default():
         json_file = open('model/model.json','r')
         loaded_model_json = json_file.read()
         json_file.close()
