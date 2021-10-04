@@ -1,5 +1,5 @@
 """
-Basic Flask file to upload and predict an uploaded image
+Basic Flask file to upload and predict an uploaded image.
 """
 import re
 import sys
@@ -12,8 +12,6 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
 sys.path.append(os.path.abspath("./model"))
 
-global graph_mode
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,7 +19,7 @@ def index_view():
     """return template index.html"""
     return render_template('index.html')
 
-def convertImage(img_data_uploaded):
+def convert_image(img_data_uploaded):
     """To Convert the uploaded image"""
     imgstr = re.search(b'base64,(.*)',img_data_uploaded).group(1)
     with open('output.png','wb') as output:
@@ -31,9 +29,8 @@ def convertImage(img_data_uploaded):
 def predict():
     """Predict function to predict an uploaded image """
     graph_mode=tf.compat.v1.get_default_graph()
-    print("about to request get_data")
     img_data = request.get_data()
-    convertImage(img_data)
+    convert_image(img_data)
     img_image = image.load_img('output.png', target_size=(150, 150))
     img_tensor = image.img_to_array(img_image)
     img_tensor = np.expand_dims(img_tensor, axis=0)
