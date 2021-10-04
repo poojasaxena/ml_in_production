@@ -8,13 +8,14 @@ import base64
 import numpy as np
 from flask import Flask, render_template, request, jsonify
 #from tensorflow.keras.models import load_model
+import tensorflow as tf
 from tensorflow.keras.preprocessing import image
-from load import *
+from tensorflow.keras.models import model_from_json
 sys.path.append(os.path.abspath("./model"))
 
 global GRAPH, MODEL
 
-MODEL, GRAPH = init()
+#MODEL, GRAPH = init()
 app = Flask(__name__)
 
 
@@ -32,6 +33,7 @@ def convertImage(img_data_uploaded):
 @app.route('/predict/',methods=['GET','POST'])
 def predict():
     """Predict function to predict an uploaded image """
+    GRAPH=tf.compat.v1.get_default_graph()
     print("about to request get_data")
     img_data = request.get_data()
     convertImage(img_data)
@@ -46,7 +48,7 @@ def predict():
         loaded_model = model_from_json(loaded_model_json)
         loaded_model.load_weights("model/model.h5")
         loaded_model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-        
+
         pred = loaded_model.predict(img_tensor)
         pred_class = "dog" if pred[0]>0.5 else "cat"
         confidence = round((1-pred[0][0])*100 if pred_class=='cat' else pred[0][0]*100, 3)
