@@ -36,10 +36,12 @@ def predict():
     img_tensor = np.expand_dims(img_tensor, axis=0)
     img_tensor /= 255.
     with graph_mode.as_default():
-        json_file = open('model/model.json','r')
-        loaded_model_json = json_file.read()
-        json_file.close()
-        loaded_model = model_from_json(loaded_model_json)
+        try:
+            with open('model/model.json','r', encoding="utf-8") as f_json:
+                json_model = f_json.read()
+        except OSError:
+            print("model.json is not found")
+        loaded_model = model_from_json(json_model)
         loaded_model.load_weights("model/model.h5")
         loaded_model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
 
