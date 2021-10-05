@@ -11,7 +11,9 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
 sys.path.append(os.path.abspath("./model"))
+import tensorflow.python.util.deprecation as deprecation
 
+deprecation._PRINT_DEPRECATION_WARNINGS = False
 app = Flask(__name__)
 
 @app.route('/')
@@ -53,5 +55,9 @@ def predict():
         return jsonify(prediction)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.debug = True
+    app.run(host="0.0.0.0") #host="0.0.0.0" will make the page accessable by going to http://[ip]:5000/ on any computer in the network.
+
+#    app.run=
+#    app.run(host="0.0.0.0", debug=True, port=8000) 
 

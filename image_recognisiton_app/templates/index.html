@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-  
     <head>
         <!-- title displayed on the browser tab -->
         <title>image classification app</title>
@@ -37,11 +36,12 @@
             //reset pred text as empty
             $("#prediction").text("");
         });
-
+      // when we press predict
         $("#predict-button").click(function(){
             let message = {image: base64Image}
             // you could also use 127.0.0.1 instead of 0.0.0.0 
-            $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(prediction){
+            //$.post("http://0.0.0.0:5000/predict", JSON.stringify(message), function(prediction){
+	    $.post("http://192.168.178.96:5000/predict", JSON.stringify(message), function(prediction){
             $("#prediction").text("results: "+ prediction["class"] + " ( confidence : "+ prediction["confidence_level"]+")");
             console.log(prediction);
             });
