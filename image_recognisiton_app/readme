@@ -1,0 +1,21 @@
+1. check out for uploading_model class :
+    https://www.programcreek.com/python/example/105202/keras.models.model_from_json
+
+2. Few important points:
+   2.1 for running this app simply on computer:
+     - in app.py
+       app.run(host="0.0.0.0")
+     - in template/index.html
+       $.post("http://0.0.0.0:5000/predict", JSON.stringify(message), function(prediction){
+     - while running app
+       flask run or flask run --host=0.0.0.0
+
+   2.2 for running this app on network (i.e to access this on computer/phone)
+      - in app.py
+      	same as 2.1
+      - find ipv4 of your network
+        'ipconfig getifaddr en0'
+      - in template/index.html
+        $.post("http://192.168.178.96:5000/predict", JSON.stringify(message), function(prediction){   //lets say my ipv4:"192.168.178.96"
+      - while running app
+        flask run --host=192.168.178.96
