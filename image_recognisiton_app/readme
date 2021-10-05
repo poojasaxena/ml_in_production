@@ -19,3 +19,7 @@
         $.post("http://192.168.178.96:5000/predict", JSON.stringify(message), function(prediction){   //lets say my ipv4:"192.168.178.96"
       - while running app
         flask run --host=192.168.178.96
+
+3. reference
+   3.1 flask_documentation_explaining_network_running
+      https://flask.palletsprojects.com/en/1.1.x/quickstart/
