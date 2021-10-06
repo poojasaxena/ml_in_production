@@ -20,6 +20,30 @@
       - while running app
         flask run --host=192.168.178.96
 
-3. reference
+3. for passing PARAMERTERS via config file
+   3.1 via json
+      import json
+      ## Loading the parameters from config
+      try:
+           with open('config.json') as config_file:
+             config_data = json.load(config_file)
+       except OSError:
+           print(f"{config_file} is not found") 
+       with open('model/'+ config_data["MODEL_JSON"],'r', encoding="utf-8") as f_json:
+     
+       loaded_model = model_from_json(json_model)
+
+    3.2 via app.config.from_pyfile
+        app.config.from_pyfile('./config/testing_enviroment.cfg')
+        app.config["MODEL_JSON"]
+
+    3.3 via class inheritence
+    	from configmodule import TestingConfigAug
+	app.config.from_object('configmodule.TestingConfigAug')
+
+	pred_class = app.config["CLASSES_NAME"][0] if pred[0]>0.5 else app.config["CLASSES_NAME"][1]
+
+    
+4. reference
    3.1 flask_documentation_explaining_network_running
       https://flask.palletsprojects.com/en/1.1.x/quickstart/

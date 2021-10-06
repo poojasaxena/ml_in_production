@@ -1,20 +1,31 @@
 """
 Basic Flask file to upload and predict an uploaded image.
+Author : Pooja SAXENA
+Date   : 02 Oktober 2021
+Place  : Hamburg
 """
 import re
 import sys
 import os
 import base64
+import json
 import numpy as np
 from flask import Flask, render_template, request, jsonify
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
-sys.path.append(os.path.abspath("./model"))
 import tensorflow.python.util.deprecation as deprecation
-
+sys.path.append(os.path.abspath("./model"))
 deprecation._PRINT_DEPRECATION_WARNINGS = False
+
 app = Flask(__name__)
+## Either this
+from configmodule import TestingConfigAug
+app.config.from_object('configmodule.TestingConfigAug')
+## or this
+# app.config.from_pyfile('./config/testing_enviroment.cfg')
+## or this
+# json, check readme for more details
 
 @app.route('/')
 def index_view():
@@ -33,31 +44,30 @@ def predict():
     graph_mode=tf.compat.v1.get_default_graph()
     img_data = request.get_data()
     convert_image(img_data)
-    img_image = image.load_img('output.png', target_size=(150, 150))
+    img_image = image.load_img('output.png', target_size=(200, 200))
     img_tensor = image.img_to_array(img_image)
     img_tensor = np.expand_dims(img_tensor, axis=0)
     img_tensor /= 255.
+
     with graph_mode.as_default():
         try:
-            with open('model/model.json','r', encoding="utf-8") as f_json:
+            with open('model/'+ app.config["MODEL_JSON"],'r', encoding="utf-8") as f_json:
                 json_model = f_json.read()
         except OSError:
-            print("model.json is not found")
+            print(f"{f_json} is not found")
         loaded_model = model_from_json(json_model)
-        loaded_model.load_weights("model/model.h5")
-        loaded_model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+        loaded_model.load_weights("model/"+ app.config["MODEL_H5"])
+        loaded_model.compile(loss=app.config["LOSS_FUNCTION"],optimizer=app.config["OPTIMIZER"],metrics=['accuracy'])
 
         pred = loaded_model.predict(img_tensor)
-        pred_class = "dog" if pred[0]>0.5 else "cat"
+        pred_class = app.config["CLASSES_NAME"][0] if pred[0]>0.5 else app.config["CLASSES_NAME"][1]
         confidence = round((1-pred[0][0])*100 if pred_class=='cat' else pred[0][0]*100, 3)
         prediction = {'class':pred_class, 'confidence_level':confidence}
         print(prediction)
         return jsonify(prediction)
 
 if __name__ == '__main__':
-    app.debug = True
-    app.run(host="0.0.0.0") #host="0.0.0.0" will make the page accessable by going to http://[ip]:5000/ on any computer in the network.
+    app.debug = app.config["DEBUG_STATE"]
+    app.run(host=app.config["HOST_NAME"], port=app.config["PORT_NUMBER"])
 
-#    app.run=
-#    app.run(host="0.0.0.0", debug=True, port=8000) 
 
