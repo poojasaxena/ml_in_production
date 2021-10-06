@@ -20,8 +20,8 @@ deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 app = Flask(__name__)
 ## Either this
-from configmodule import TestingConfigAug
-app.config.from_object('configmodule.TestingConfigAug')
+from configmodule import TestingConfigTLearn
+app.config.from_object('configmodule.TestingConfigTLearn')
 ## or this
 # app.config.from_pyfile('./config/testing_enviroment.cfg')
 ## or this
@@ -44,7 +44,7 @@ def predict():
     graph_mode=tf.compat.v1.get_default_graph()
     img_data = request.get_data()
     convert_image(img_data)
-    img_image = image.load_img('output.png', target_size=(200, 200))
+    img_image = image.load_img('output.png', target_size=(app.config['IMAGE_SIZE'], app.config['IMAGE_SIZE']))
     img_tensor = image.img_to_array(img_image)
     img_tensor = np.expand_dims(img_tensor, axis=0)
     img_tensor /= 255.
@@ -61,7 +61,7 @@ def predict():
 
         pred = loaded_model.predict(img_tensor)
         pred_class = app.config["CLASSES_NAME"][0] if pred[0]>0.5 else app.config["CLASSES_NAME"][1]
-        confidence = round((1-pred[0][0])*100 if pred_class=='cat' else pred[0][0]*100, 3)
+        confidence = round((1-pred[0][0])*100 if pred_class==app.config["CLASSES_NAME"][1] else pred[0][0]*100, 3)
         prediction = {'class':pred_class, 'confidence_level':confidence}
         print(prediction)
         return jsonify(prediction)
