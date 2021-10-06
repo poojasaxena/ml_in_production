@@ -1,5 +1,4 @@
-1. check out for uploading_model class :
-    https://www.programcreek.com/python/example/105202/keras.models.model_from_json
+1. inside model directory, you should keep model.json and model.h5 file
 
 2. Few important points:
    2.1 for running this app simply on computer:
@@ -47,3 +46,6 @@
 4. reference
    3.1 flask_documentation_explaining_network_running
       https://flask.palletsprojects.com/en/1.1.x/quickstart/
+
+   3.2 check out for uploading_model class :
+    https://www.programcreek.com/python/example/105202/keras.models.model_from_json
