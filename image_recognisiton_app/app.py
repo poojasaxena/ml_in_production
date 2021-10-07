@@ -11,7 +11,7 @@ import base64
 import json
 import numpy as np
 from flask import Flask, render_template, request, jsonify
-import tensorflow as tf
+from tensorflow.compat.v1 import get_default_graph
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
 import tensorflow.python.util.deprecation as deprecation
@@ -19,7 +19,8 @@ sys.path.append(os.path.abspath("./model"))
 deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 app = Flask(__name__)
-## Either this
+
+## For Config, either use this
 from configmodule import TestingConfigTLearn
 app.config.from_object('configmodule.TestingConfigTLearn')
 ## or this
@@ -38,10 +39,11 @@ def convert_image(img_data_uploaded):
     with open('output.png','wb') as output:
         output.write(base64.b64decode(imgstr))
 
-@app.route('/predict/',methods=['GET','POST'])
+#@app.route('/predict/',methods=['GET','POST'])
+@app.route('/api/predict/',methods=['GET','POST'])
 def predict():
     """Predict function to predict an uploaded image """
-    graph_mode=tf.compat.v1.get_default_graph()
+    graph_mode= get_default_graph()
     img_data = request.get_data()
     convert_image(img_data)
     img_image = image.load_img('output.png', target_size=(app.config['IMAGE_SIZE'], app.config['IMAGE_SIZE']))
