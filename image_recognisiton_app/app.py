@@ -21,7 +21,7 @@ deprecation._PRINT_DEPRECATION_WARNINGS = False
 app = Flask(__name__)
 
 ## For Config, either use this
-from configmodule import TestingConfigTLearn
+from configmodule import *
 app.config.from_object('configmodule.TestingConfigTLearn')
 ## or this
 # app.config.from_pyfile('./config/testing_enviroment.cfg')
