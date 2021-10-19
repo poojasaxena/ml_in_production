@@ -15,14 +15,13 @@ from tensorflow.compat.v1 import get_default_graph
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import model_from_json
 import tensorflow.python.util.deprecation as deprecation
-sys.path.append(os.path.abspath("./model"))
 deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 app = Flask(__name__)
 
 ## For Config, either use this
 from configmodule import *
-app.config.from_object('configmodule.TestingConfigTLearn')
+app.config.from_object('configmodule.AugmentationConfig')
 ## or this
 # app.config.from_pyfile('./config/testing_enviroment.cfg')
 ## or this
@@ -50,15 +49,14 @@ def predict():
     img_tensor = image.img_to_array(img_image)
     img_tensor = np.expand_dims(img_tensor, axis=0)
     img_tensor /= 255.
-
     with graph_mode.as_default():
         try:
-            with open('model/'+ app.config["MODEL_JSON"],'r', encoding="utf-8") as f_json:
+            with open(app.config["SAVED_MODEL_DIR"] +"/dog_cat_classifier/" + app.config["MODEL_JSON"],'r', encoding="utf-8") as f_json:
                 json_model = f_json.read()
         except OSError:
             print(f"{f_json} is not found")
         loaded_model = model_from_json(json_model)
-        loaded_model.load_weights("model/"+ app.config["MODEL_H5"])
+        loaded_model.load_weights(app.config["SAVED_MODEL_DIR"] +"/dog_cat_classifier/"+ app.config["MODEL_H5"])
         loaded_model.compile(loss=app.config["LOSS_FUNCTION"],optimizer=app.config["OPTIMIZER"],metrics=['accuracy'])
 
         pred = loaded_model.predict(img_tensor)
