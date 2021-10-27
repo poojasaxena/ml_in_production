@@ -20,9 +20,7 @@ def extract_labels(directory):
 def load_labels():
     base_dir = os.environ.get('DirForImages')+'/5-celebrity-faces-dataset/'
     dataset_path = os.path.join(base_dir, 'train/')
-    print("dataset_path: ", dataset_path)
     labels = extract_labels(dataset_path)
-    print(">> labels", labels)
     return labels
 
 def labels_encoder(labels):
