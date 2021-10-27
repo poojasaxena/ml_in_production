@@ -23,4 +23,4 @@ class TransferLearningConfig(Config):
     MODEL_JSON     = "model_dogcat_classifier_vgg_tLearn_93acc_okt21.json"
     MODEL_H5       = "model_dogcat_classifier_vgg_tLearn_93acc_okt21.h5"
     IMAGE_SIZE     = 224
-    
+    THRESHOLD      = 80

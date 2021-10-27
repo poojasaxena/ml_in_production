@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 ## For Config, either use this
 from configmodule import *
-app.config.from_object('configmodule.AugmentationConfig')
+app.config.from_object('configmodule.TransferLearningConfig')
 ## or this
 # app.config.from_pyfile('./config/testing_enviroment.cfg')
 ## or this
@@ -62,6 +62,8 @@ def predict():
         pred = loaded_model.predict(img_tensor)
         pred_class = app.config["CLASSES_NAME"][0] if pred[0]>0.5 else app.config["CLASSES_NAME"][1]
         confidence = round((1-pred[0][0])*100 if pred_class==app.config["CLASSES_NAME"][1] else pred[0][0]*100, 3)
+        if confidence <= app.config['THRESHOLD']:
+            pred_class = 'unknown'
         prediction = {'class':pred_class, 'confidence_level':confidence}
         print(prediction)
         return jsonify(prediction)
