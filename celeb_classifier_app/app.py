@@ -44,6 +44,13 @@ def convert_image(img_data_uploaded):
     with open('output.png','wb') as output:
         output.write(base64.b64decode(imgstr))
 
+def load_models():
+    # load embedding model
+    facenet_model = load_model(app.config["SAVED_MODEL_DIR"]+app.config['MODEL_EMBEDDING'])
+    # prediction for the face
+    classification_model  = pickle.load(open(app.config['SAVED_MODEL_DIR']+app.config['MODEL_CLASSIFICATION'], "rb"))
+    return facenet_model,classification_model
+
 @app.route('/api/predict/',methods=['GET','POST'])
 def predict():
     """Predict function to predict an uploaded image """
@@ -52,28 +59,18 @@ def predict():
     convert_image(img_data)
     image_pixels = extract_face('output.png')
 
-    # load embedding model
-    facenet_model = load_model(app.config["SAVED_MODEL_DIR"]+app.config['MODEL_EMBEDDING'])
-    print(">> inputs: ",facenet_model.inputs)
+    ## model calling
+    facenet_model, classifiation_model  = load_models()
     emb_image    = get_128vectorEmbedding(facenet_model, image_pixels)
     print(">> embedded image shape:", emb_image.shape)
     
-    with graph_mode.as_default():
-
-        # prediction for the face
-        classifiation_model  = pickle.load(open(app.config['SAVED_MODEL_DIR']+app.config['MODEL_CLASSIFICATION'], "rb"))
-        
+    with graph_mode.as_default():        
         samples_image = np.expand_dims(emb_image, axis=0)
-        print(">> sample image shape: ", samples_image.shape)
-        
         yhat_class    = classifiation_model.predict(samples_image)
-        print(">> y_hat:", yhat_class)
         yhat_prob     = classifiation_model.predict_proba(samples_image)
-        print(">> probability : ", yhat_prob)
         
         # setup encoder for test images    
         labels  = load_labels()
-        print(">>> lables", labels)
         label_encoder, label_y_class  = labels_encoder(labels)
 
         # get name
