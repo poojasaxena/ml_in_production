@@ -20,8 +20,8 @@ from keras.models import load_model
 import tensorflow.python.util.deprecation as deprecation
 deprecation._PRINT_DEPRECATION_WARNINGS = False
 
-import platform
-print(f"python version: {platform.python_version()}")
+#import platform
+#print(f"python version: {platform.python_version()}")
 
 app = Flask(__name__)
 
@@ -62,7 +62,6 @@ def predict():
     ## model calling
     facenet_model, classifiation_model  = load_models()
     emb_image    = get_128vectorEmbedding(facenet_model, image_pixels)
-    print(">> embedded image shape:", emb_image.shape)
     
     with graph_mode.as_default():        
         samples_image = np.expand_dims(emb_image, axis=0)

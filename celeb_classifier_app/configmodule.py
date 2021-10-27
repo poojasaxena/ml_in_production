@@ -9,7 +9,7 @@ class Config(object):
 class Developement(Config):
     MODEL_EMBEDDING       = "facenet_keras.h5"
     MODEL_CLASSIFICATION  = "svm_classifie_5_celebraties.pkl"
-    THRESHOLD        = 25
+    THRESHOLD        = 50
 
 class Production(Config):
     MODEL_EMBEDDING       = "facenet_keras.h5"
