@@ -14,11 +14,13 @@ class Config(object):
 class CnnConfig(Config):
     MODEL_JSON     = "model_dogcat_classifier_cnn_85acc_okt21.json"
     MODEL_H5       = "model_dogcat_classifier_cnn_85acc_okt21.h5"
-
+    THRESHOLD      = 80
+    
 class AugmentationConfig(Config):
     MODEL_JSON     = "model_dogcat_classifier_cnn_augmentation_90acc_okt21.json"
     MODEL_H5       = "model_dogcat_classifier_cnn_augmentation_90acc_okt21.h5"
-
+    THRESHOLD      = 70
+    
 class TransferLearningConfig(Config):
     MODEL_JSON     = "model_dogcat_classifier_vgg_tLearn_93acc_okt21.json"
     MODEL_H5       = "model_dogcat_classifier_vgg_tLearn_93acc_okt21.h5"
