@@ -69,7 +69,7 @@ def predict():
         yhat_prob     = classifiation_model.predict_proba(samples_image)
         
         # setup encoder for test images    
-        labels  = load_labels()
+        labels  = load_labels(app.config['LOCAL_DATASET_DIR'])
         label_encoder, label_y_class  = labels_encoder(labels)
 
         # get name
