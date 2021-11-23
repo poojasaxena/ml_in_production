@@ -13,6 +13,8 @@ import base64
 import json
 import numpy as np
 import pickle
+#from PIL import Image
+#from resizeimage import resizeimage
 from flask import Flask, render_template, request, jsonify
 from helper_class import labels_encoder, extract_face, get_128vectorEmbedding, load_labels
 from tensorflow.compat.v1 import get_default_graph
@@ -27,7 +29,7 @@ app = Flask(__name__)
 
 ## For Config, either use this
 from configmodule import *
-app.config.from_object('configmodule.Developement')
+app.config.from_object('configmodule.Production')
 ## or this
 # app.config.from_pyfile('./config/testing_enviroment.cfg')
 ## or this
@@ -41,7 +43,9 @@ def index_view():
 def convert_image(img_data_uploaded):
     """To Convert the uploaded image"""
     imgstr = re.search(b'base64,(.*)',img_data_uploaded).group(1)
-    with open('output.png','wb') as output:
+    with open('output.png', 'wb') as output:
+        #image = Image.open(output)
+        #resizeimage.resize_cover.validate(image, [200, 100])
         output.write(base64.b64decode(imgstr))
 
 def load_models():
@@ -77,7 +81,7 @@ def predict():
         class_probability = yhat_prob[0,class_index] * 100
     
         if class_probability >= app.config["THRESHOLD"]:
-            predicted_name = label_encoder.inverse_transform(yhat_class)[0]
+            predicted_name = label_encoder.inverse_transform(yhat_class)[0].replace("_"," ").title()
         else:
             predicted_name = 'Unknown'
 
