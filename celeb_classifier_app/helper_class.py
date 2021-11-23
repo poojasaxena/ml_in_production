@@ -17,8 +17,7 @@ def extract_labels(directory):
         y.extend(labels)
     return np.asarray(y)
     
-def load_labels():
-    base_dir = os.environ.get('DirForImages')+'/5-celebrity-faces-dataset/'
+def load_labels(base_dir):
     dataset_path = os.path.join(base_dir, 'train/')
     labels = extract_labels(dataset_path)
     return labels
