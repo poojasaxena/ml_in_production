@@ -1,7 +1,7 @@
 import os
 
 class Config(object):
-    HOST_NAME             = "0.0.0.0"
+    HOST_NAME             = "192.168.178.96"  #192.168.178.96
     PORT_NUMBER           = 8000
     DEBUG_STATE           = 'True'
     SAVED_MODEL_DIR       = os.environ.get('DirForSavedModel') + '/face_recognisition/'
@@ -14,6 +14,6 @@ class Developement(Config):
 
 class Production(Config):
     MODEL_EMBEDDING       = "facenet_keras.h5"
-    THRESHOLD             = 90
+    THRESHOLD             = 99
 
     
